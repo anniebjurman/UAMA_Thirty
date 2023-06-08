@@ -61,8 +61,8 @@ class MainActivity : ComponentActivity() {
 
         throwButton.setOnClickListener { view: View ->
             game.throwDice()
+            updateDiceImages(game.getDiceList())
             updateNumThrowText()
-            updateDiceImage(game.getDiceList())
         }
 
         //Spinner
@@ -75,10 +75,11 @@ class MainActivity : ComponentActivity() {
         }
 
         game.throwDice()
+        updateDiceImages(game.getDiceList())
         updateNumThrowText()
     }
 
-    private fun updateDiceImage(diceList: List<Dice>) {
+    private fun updateDiceImages(diceList: List<Dice>) {
         for (d in diceButtonList.indices) {
             diceButtonList[d].setImageResource(getImgPath(diceList[d], diceList[d].value))
         }
