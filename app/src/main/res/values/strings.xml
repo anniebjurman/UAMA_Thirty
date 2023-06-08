@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Thirty</string>
+
+    <string name="dice1">Dice1</string>
+    <string name="dice2">Dice2</string>
+    <string name="dice3">Dice3</string>
+    <string name="dice4">Dice4</string>
+    <string name="dice5">Dice5</string>
+    <string name="dice6">Dice6</string>
+
+    <string name="throw_button">Throw</string>
+    <string name="throw_count">Throws left: </string>
+
+    <string-array name="score_list">
+        <item>Low</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+</resources>
