@@ -28,18 +28,9 @@ class MainActivity : ComponentActivity() {
     private val diceButtonList = mutableListOf<ImageButton>()
     private lateinit var throwButton: Button
     private lateinit var throwCountView: TextView
-    private var numThrows = -1
     private lateinit var scoreList: Array<String>
     private lateinit var spinner: Spinner
-
-    private val diceList = listOf(
-        Dice(1, false),
-        Dice(2, false),
-        Dice(3, false),
-        Dice(4, false),
-        Dice(5, false),
-        Dice(6, false),
-    )
+    private var game = Game()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,13 +54,15 @@ class MainActivity : ComponentActivity() {
 
         for (d in diceButtonList.indices) {
             diceButtonList[d].setOnClickListener { view: View ->
-                toggleLockedDice(d)
+                game.toggleLockedDice(d)
+                updateOneDiceImage(d)
             }
         }
 
         throwButton.setOnClickListener { view: View ->
-            throwDice()
-            println(diceList)
+            game.throwDice()
+            updateNumThrowText()
+            updateDiceImage(game.getDiceList())
         }
 
         //Spinner
@@ -81,29 +74,24 @@ class MainActivity : ComponentActivity() {
             spinner.adapter = adapter
         }
 
-        throwDice()
+        game.throwDice()
+        updateNumThrowText()
     }
 
-    private fun toggleLockedDice(dice: Int) {
-        diceList[dice].locked = !diceList[dice].locked
-        diceButtonList[dice].setImageResource(getImgPath(diceList[dice], diceList[dice].value))
-    }
-
-    private fun throwDice() {
-        for (d in diceList.indices) {
-            if (!diceList[d].locked) {
-                var value = Random.nextInt(1, 7)
-                diceList[d].value = value
-            }
-        }
-
+    private fun updateDiceImage(diceList: List<Dice>) {
         for (d in diceButtonList.indices) {
             diceButtonList[d].setImageResource(getImgPath(diceList[d], diceList[d].value))
         }
+    }
 
-        numThrows += 1
-        val text = "Throws left: " + (3 - numThrows).toString()
+    private fun updateNumThrowText() {
+        val text = "Throws left: " + (3 - game.getNumThrows()).toString()
         throwCountView.text = text
+    }
+
+    private fun updateOneDiceImage(diceIndex: Int) {
+        val diceList = game.getDiceList()
+        diceButtonList[diceIndex].setImageResource(getImgPath(diceList[diceIndex], diceList[diceIndex].value))
     }
 
     private fun getImgPath(dice: Dice, num: Int): Int {
