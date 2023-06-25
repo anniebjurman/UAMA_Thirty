@@ -49,9 +49,15 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Spinner
+        scoreList = resources.getStringArray(R.array.score_list)
+        spinner = findViewById(R.id.spinner)
+        val adapter = ArrayAdapter(this,
+            android.R.layout.simple_spinner_item, scoreList)
+        spinner.adapter = adapter
+
         // Setup clickListeners
         throwButton.setOnClickListener { view: View ->
-            Log.d("click, step: ", game.getCurrentStep().toString())
             game.throwDice()
             updateDiceImages(game.getDiceList())
             updateRoundThrowText()
@@ -62,6 +68,7 @@ class MainActivity : ComponentActivity() {
             game.setCurrentSet(4)
             updateDescriptionText()
             updateElementVisibility()
+            game.setChosenLevel(spinner.selectedItem.toString())
         }
         addPointsButton.setOnClickListener { view: View ->
             updateDescriptionText()
@@ -72,13 +79,6 @@ class MainActivity : ComponentActivity() {
             updateDescriptionText()
             updateElementVisibility()
         }
-
-        // Spinner
-        scoreList = resources.getStringArray(R.array.score_list)
-        spinner = findViewById(R.id.spinner)
-        val adapter = ArrayAdapter(this,
-            android.R.layout.simple_spinner_item, scoreList)
-        spinner.adapter = adapter
 
         // Init game
         updateDiceImages(game.getDiceList())
@@ -163,18 +163,6 @@ class MainActivity : ComponentActivity() {
     private fun getImgPath(dice: Dice, num: Int): Int {
         if (game.getCurrentThrow() == 0) {
             return R.drawable.placeholder
-        } else if (game.getRoundIsOver()) {
-            return when (num) {
-                1 -> (R.drawable.green1)
-                2 -> (R.drawable.green2)
-                3 -> (R.drawable.green3)
-                4 -> (R.drawable.green4)
-                5 -> (R.drawable.green5)
-                6 -> (R.drawable.green6)
-                else -> {
-                    throw error("error")
-                }
-            }
         } else if (dice.locked) {
             return when (num) {
                 1 -> (R.drawable.orange1)
@@ -183,6 +171,18 @@ class MainActivity : ComponentActivity() {
                 4 -> (R.drawable.orange4)
                 5 -> (R.drawable.orange5)
                 6 -> (R.drawable.orange6)
+                else -> {
+                    throw error("error")
+                }
+            }
+        } else if (game.getRoundIsOver()) {
+            return when (num) {
+                1 -> (R.drawable.green1)
+                2 -> (R.drawable.green2)
+                3 -> (R.drawable.green3)
+                4 -> (R.drawable.green4)
+                5 -> (R.drawable.green5)
+                6 -> (R.drawable.green6)
                 else -> {
                     throw error("error")
                 }

@@ -1,5 +1,6 @@
 package se.umu.cs.id19abn.thirty
 
+import java.util.Objects
 import kotlin.random.Random
 
 class Game {
@@ -16,6 +17,9 @@ class Game {
     private var numRounds = 10
     private var roundIsOver = false
     private var currentStep = 1
+    private var chosenLevel = 1
+    private var totalPoints = 0
+    private var historyPoints = arrayListOf<Any>()
 
     fun getRoundIsOver(): Boolean {
         return roundIsOver
@@ -30,6 +34,24 @@ class Game {
 
     fun getCurrentThrow(): Int {
         return currentThrow
+    }
+
+    fun setChosenLevel(level: String) {
+        when (level) {
+            "low" -> {chosenLevel = 0}
+            "1" -> {chosenLevel = 1}
+            "2" -> {chosenLevel = 2}
+            "3" -> {chosenLevel = 3}
+            "4" -> {chosenLevel = 4}
+            "5" -> {chosenLevel = 5}
+            "6" -> {chosenLevel = 6}
+            "7" -> {chosenLevel = 7}
+            "8" -> {chosenLevel = 8}
+            "9" -> {chosenLevel = 9}
+            "10" -> {chosenLevel = 10}
+            "11" -> {chosenLevel = 11}
+            "12" -> {chosenLevel = 12}
+        }
     }
 
     fun throwDice() {
@@ -50,6 +72,25 @@ class Game {
         }
 
         updateStep()
+    }
+
+    fun countPoints() {
+        val dice = arrayListOf<Int>()
+        var sum = 0
+        for (d in diceList.indices) {
+            if (diceList[d].locked) {
+                dice.add(diceList[d].value)
+                sum += diceList[d].value
+            }
+        }
+
+        // TODO: low is not implemented
+        if (sum == chosenLevel) {
+            totalPoints += sum
+            //historyPoints.add({dice, sum})
+        } else {
+
+        }
     }
 
     private fun generateNewDice() {
