@@ -14,6 +14,9 @@ class MainActivity : ComponentActivity() {
 
     private val diceButtonList = mutableListOf<ImageButton>()
     private lateinit var throwButton: Button
+    private lateinit var chooseButton: Button
+    private lateinit var addPointsButton: Button
+    private lateinit var nextRoundButton: Button
     private lateinit var throwCountView: TextView
     private lateinit var descriptionTextView: TextView
     private lateinit var scoreList: Array<String>
@@ -26,11 +29,6 @@ class MainActivity : ComponentActivity() {
 
 //        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
-//        val rootLayout = root_layout.background as AnimationDrawable
-//        rootLayout.setEnterFadeDuration(10)
-//        rootLayout.setExitFadeDuration(5000)
-//        rootLayout.start()
-
         diceButtonList.add(findViewById(R.id.dice_button_1))
         diceButtonList.add(findViewById(R.id.dice_button_2))
         diceButtonList.add(findViewById(R.id.dice_button_3))
@@ -38,6 +36,9 @@ class MainActivity : ComponentActivity() {
         diceButtonList.add(findViewById(R.id.dice_button_5))
         diceButtonList.add(findViewById(R.id.dice_button_6))
         throwButton = findViewById(R.id.throw_button)
+        chooseButton = findViewById(R.id.choose_button)
+        addPointsButton = findViewById(R.id.add_points_button)
+        nextRoundButton = findViewById(R.id.next_round_button)
         throwCountView = findViewById(R.id.throw_count)
         descriptionTextView = findViewById(R.id.description)
 
@@ -48,14 +49,31 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Setup clickListeners
         throwButton.setOnClickListener { view: View ->
+            Log.d("click, step: ", game.getCurrentStep().toString())
             game.throwDice()
             updateDiceImages(game.getDiceList())
             updateRoundThrowText()
             updateDescriptionText()
+            updateElementVisibility()
+        }
+        chooseButton.setOnClickListener { view: View ->
+            game.setCurrentSet(4)
+            updateDescriptionText()
+            updateElementVisibility()
+        }
+        addPointsButton.setOnClickListener { view: View ->
+            updateDescriptionText()
+            updateElementVisibility()
+        }
+        nextRoundButton.setOnClickListener { view: View ->
+            game.setCurrentSet(1)
+            updateDescriptionText()
+            updateElementVisibility()
         }
 
-        //Spinner
+        // Spinner
         scoreList = resources.getStringArray(R.array.score_list)
         spinner = findViewById(R.id.spinner)
         val adapter = ArrayAdapter(this,
@@ -65,6 +83,9 @@ class MainActivity : ComponentActivity() {
         // Init game
         updateDiceImages(game.getDiceList())
         updateRoundThrowText()
+
+        // Inactivate elements
+        updateElementVisibility()
     }
 
     private fun updateDiceImages(diceList: List<Dice>) {
@@ -78,16 +99,58 @@ class MainActivity : ComponentActivity() {
         throwCountView.text = text
     }
 
-    private fun updateDescriptionText(): Int {
-        Log.d("updateDescriptionText, step: ", game.getCurrentStep().toString())
-        return when (game.getCurrentStep()) {
-            1 -> (R.string.step1)
-            2 -> (R.string.step2)
-            3 -> (R.string.step3)
-            4 -> (R.string.step4)
-            5 -> (R.string.step5)
+    private fun updateDescriptionText() {
+        when (game.getCurrentStep()) {
+            1 -> {
+                descriptionTextView.text = getText(R.string.step1)
+            }
+            2 -> {
+                descriptionTextView.text = getText(R.string.step2)
+            }
+            3 -> {
+                descriptionTextView.text = getText(R.string.step3)
+            }
+            4 -> {
+                descriptionTextView.text = getText(R.string.step4)
+            }
+            5 -> {
+                descriptionTextView.text = getText(R.string.step5)
+            }
             else -> {
                 throw error("error")
+            }
+        }
+    }
+
+    private fun updateElementVisibility() {
+        when (game.getCurrentStep()) {
+            1, 2 -> {
+                throwButton.visibility = View.VISIBLE
+                chooseButton.visibility = View.GONE
+                spinner.visibility = View.GONE
+                addPointsButton.visibility = View.GONE
+                nextRoundButton.visibility = View.GONE
+            }
+            3 -> {
+                throwButton.visibility = View.GONE
+                chooseButton.visibility = View.VISIBLE
+                spinner.visibility = View.VISIBLE
+                addPointsButton.visibility = View.GONE
+                nextRoundButton.visibility = View.GONE
+            }
+            4 -> {
+                throwButton.visibility = View.GONE
+                chooseButton.visibility = View.GONE
+                spinner.visibility = View.GONE
+                addPointsButton.visibility = View.VISIBLE
+                nextRoundButton.visibility = View.GONE
+            }
+            5 -> {
+                throwButton.visibility = View.GONE
+                chooseButton.visibility = View.GONE
+                spinner.visibility = View.GONE
+                addPointsButton.visibility = View.GONE
+                nextRoundButton.visibility = View.VISIBLE
             }
         }
     }

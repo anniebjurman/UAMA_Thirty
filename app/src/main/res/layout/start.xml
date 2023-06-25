@@ -14,17 +14,17 @@
         android:textSize="30sp"
         android:gravity="center"
         android:textColor="#274E40"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="40dp"/>
+        android:layout_marginBottom="50dp"/>
 
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/step1"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="40dp"
         android:layout_marginStart="35dp"/>
 
     <TextView
@@ -32,7 +32,7 @@
         android:text="@string/round_throw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="15dp"
         android:layout_marginStart="35dp"
         />
 
@@ -135,16 +135,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_marginTop="50dp">
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:spinnerMode="dialog"
-                android:padding="13dp"
-                android:background="@drawable/spinner_shape"
-                android:layout_gravity="center"/>
+            android:layout_marginTop="90dp">
 
             <Button
                 android:id="@+id/throw_button"
@@ -154,6 +145,53 @@
                 android:text="@string/throw_button"
                 android:textColor="@color/white" />
 
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dialog"
+                android:padding="13dp"
+                android:background="@drawable/spinner_shape"
+                android:layout_gravity="center"/>
+            <Button
+                android:id="@+id/choose_button"
+                android:layout_gravity="center"
+                android:background="@drawable/button_shape"
+                android:gravity="center"
+                android:text="@string/choose_button"
+                android:textColor="@color/white" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <Button
+                android:id="@+id/add_points_button"
+                android:layout_gravity="center"
+                android:background="@drawable/button_shape"
+                android:gravity="center"
+                android:text="@string/add_points_button"
+                android:textColor="@color/white"
+                android:width="110dp"/>
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <Button
+                android:id="@+id/next_round_button"
+                android:layout_gravity="center"
+                android:background="@drawable/button_shape"
+                android:gravity="center"
+                android:text="@string/next_round_button"
+                android:textColor="@color/white"
+                android:width="110dp"/>
         </TableRow>
     </TableLayout>
 </LinearLayout>

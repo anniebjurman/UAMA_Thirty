@@ -71,6 +71,10 @@ class Game {
         }
     }
 
+    fun setCurrentSet(step: Int) {
+        currentStep = step
+    }
+
     fun getCurrentStep(): Int {
         return currentStep
     }

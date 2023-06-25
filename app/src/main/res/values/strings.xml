@@ -9,6 +9,9 @@
     <string name="dice6">Dice6</string>
 
     <string name="throw_button">Throw</string>
+    <string name="choose_button">Choose</string>
+    <string name="add_points_button">Add points</string>
+    <string name="next_round_button">Next round</string>
     <string name="round_throw">Round 1 / Throw 0</string>
 
     <string name="step1">1. Start the game by making the first throw.</string>
