@@ -19,6 +19,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var nextRoundButton: Button
     private lateinit var throwCountView: TextView
     private lateinit var descriptionTextView: TextView
+    private lateinit var statusAddTextView: TextView
+    private lateinit var totalPointsTextView: TextView
     private lateinit var scoreList: Array<String>
     private lateinit var spinner: Spinner
     private var game = Game()
@@ -41,11 +43,15 @@ class MainActivity : ComponentActivity() {
         nextRoundButton = findViewById(R.id.next_round_button)
         throwCountView = findViewById(R.id.throw_count)
         descriptionTextView = findViewById(R.id.description)
+        statusAddTextView = findViewById(R.id.status_add)
+        totalPointsTextView = findViewById(R.id.total_points)
 
         for (d in diceButtonList.indices) {
             diceButtonList[d].setOnClickListener { view: View ->
-                game.toggleLockedDice(d)
-                updateOneDiceImage(d)
+                if (game.getCurrentStep() != 3) {
+                    game.toggleLockedDice(d)
+                    updateOneDiceImage(d)
+                }
             }
         }
 
@@ -65,19 +71,30 @@ class MainActivity : ComponentActivity() {
             updateElementVisibility()
         }
         chooseButton.setOnClickListener { view: View ->
-            game.setCurrentSet(4)
+            game.setCurrentStep(4)
             updateDescriptionText()
             updateElementVisibility()
+            updateDiceImages(game.getDiceList())
             game.setChosenLevel(spinner.selectedItem.toString())
         }
         addPointsButton.setOnClickListener { view: View ->
             updateDescriptionText()
             updateElementVisibility()
+
+            val status = game.countPoints()
+            statusAddTextView.text = status
+            updateDiceImages(game.getDiceList())
+
+            val totalPointsString = "Points: " + game.getTotalPoints().toString()
+            totalPointsTextView.text = totalPointsString
         }
         nextRoundButton.setOnClickListener { view: View ->
-            game.setCurrentSet(1)
+            game.setCurrentStep(1)
             updateDescriptionText()
             updateElementVisibility()
+            updateDiceImages(game.getDiceList())
+            updateRoundThrowText()
+            statusAddTextView.text = ""
         }
 
         // Init game
@@ -143,9 +160,9 @@ class MainActivity : ComponentActivity() {
                 chooseButton.visibility = View.GONE
                 spinner.visibility = View.GONE
                 addPointsButton.visibility = View.VISIBLE
-                nextRoundButton.visibility = View.GONE
+                nextRoundButton.visibility = View.VISIBLE
             }
-            5 -> {
+            5 -> { // maybe don't need this
                 throwButton.visibility = View.GONE
                 chooseButton.visibility = View.GONE
                 spinner.visibility = View.GONE
@@ -161,7 +178,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun getImgPath(dice: Dice, num: Int): Int {
-        if (game.getCurrentThrow() == 0) {
+        if (game.getCurrentThrow() == 0 || dice.counted) {
             return R.drawable.placeholder
         } else if (dice.locked) {
             return when (num) {
@@ -175,26 +192,46 @@ class MainActivity : ComponentActivity() {
                     throw error("error")
                 }
             }
-        } else if (game.getRoundIsOver()) {
+        } else if (game.getCurrentStep() == 3) {
             return when (num) {
+                1 -> (R.drawable.beige1)
+                2 -> (R.drawable.beige2)
+                3 -> (R.drawable.beige3)
+                4 -> (R.drawable.beige4)
+                5 -> (R.drawable.beige5)
+                6 -> (R.drawable.beige6)
+                else -> {
+                    throw error("error")
+                }
+            }
+        }
+//        else if (game.getRoundIsOver()) {
+//            return when (num) {
+//                1 -> (R.drawable.green1)
+//                2 -> (R.drawable.green2)
+//                3 -> (R.drawable.green3)
+//                4 -> (R.drawable.green4)
+//                5 -> (R.drawable.green5)
+//                6 -> (R.drawable.green6)
+//                else -> {
+//                    throw error("error")
+//                }
+//            }
+//        }
+        else {
+            return when (num) {
+//                1 -> (R.drawable.blue1)
+//                2 -> (R.drawable.blue2)
+//                3 -> (R.drawable.blue3)
+//                4 -> (R.drawable.blue4)
+//                5 -> (R.drawable.blue5)
+//                6 -> (R.drawable.blue6)
                 1 -> (R.drawable.green1)
                 2 -> (R.drawable.green2)
                 3 -> (R.drawable.green3)
                 4 -> (R.drawable.green4)
                 5 -> (R.drawable.green5)
                 6 -> (R.drawable.green6)
-                else -> {
-                    throw error("error")
-                }
-            }
-        } else {
-            return when (num) {
-                1 -> (R.drawable.blue1)
-                2 -> (R.drawable.blue2)
-                3 -> (R.drawable.blue3)
-                4 -> (R.drawable.blue4)
-                5 -> (R.drawable.blue5)
-                6 -> (R.drawable.blue6)
                 else -> {
                     throw error("error")
                 }

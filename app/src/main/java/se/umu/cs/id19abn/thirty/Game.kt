@@ -1,5 +1,6 @@
 package se.umu.cs.id19abn.thirty
 
+import android.util.Log
 import java.util.Objects
 import kotlin.random.Random
 
@@ -17,9 +18,9 @@ class Game {
     private var numRounds = 10
     private var roundIsOver = false
     private var currentStep = 1
-    private var chosenLevel = 1
+    private var chosenLevel = 0
     private var totalPoints = 0
-    private var historyPoints = arrayListOf<Any>()
+    private var historyPoints = arrayListOf<Score>()
 
     fun getRoundIsOver(): Boolean {
         return roundIsOver
@@ -74,23 +75,52 @@ class Game {
         updateStep()
     }
 
-    fun countPoints() {
-        val dice = arrayListOf<Int>()
+    fun countPoints(): String {
+        val dice = mutableListOf<Int>()
         var sum = 0
+        val diceIndices = mutableListOf<Int>()
         for (d in diceList.indices) {
             if (diceList[d].locked) {
-                dice.add(diceList[d].value)
+                diceList[d].counted = true
+                diceList[d].locked = false
+
                 sum += diceList[d].value
+                dice.add(diceList[d].value)
+                diceIndices.add(d)
             }
         }
 
-        // TODO: low is not implemented
-        if (sum == chosenLevel) {
-            totalPoints += sum
-            //historyPoints.add({dice, sum})
-        } else {
+        if (chosenLevel == 0) {
+            return if (sum == 1 || sum == 2 || sum == 3) {
+                totalPoints += sum
+                historyPoints.add(Score(dice, sum, currentRound))
+                "$sum points added!"
 
+            } else {
+                diceIndices.forEach {
+                    diceList[it].counted = false
+                    diceList[it].locked = true
+                }
+                "Selected dice does not add upp to 1, 2 or 3"
+            }
+        } else {
+            return if (sum == chosenLevel) {
+                totalPoints += sum
+                historyPoints.add(Score(dice, sum, currentRound))
+                "$sum points added!"
+            } else {
+                diceIndices.forEach {
+                    diceList[it].counted = false
+                    diceList[it].locked = true
+                }
+                "Selected dice does not add upp to $chosenLevel"
+            }
         }
+
+    }
+
+    fun getTotalPoints(): Int {
+        return totalPoints
     }
 
     private fun generateNewDice() {
@@ -112,15 +142,25 @@ class Game {
         }
     }
 
-    fun setCurrentSet(step: Int) {
+    fun setCurrentStep(step: Int) {
         currentStep = step
+
+        if (currentStep == 1) {
+            currentRound += 1
+            currentThrow = 0
+            resetDice()
+        }
     }
 
     fun getCurrentStep(): Int {
         return currentStep
     }
+
     private fun resetDice() {
-        diceList.forEach { it.locked = false }
+        diceList.forEach {
+            it.locked = false
+            it.counted = false
+        }
     }
 
     fun toggleLockedDice(dice: Int) {
