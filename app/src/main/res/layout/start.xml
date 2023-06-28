@@ -207,5 +207,18 @@
                 android:textColor="@color/white"
                 android:width="110dp" />
         </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <Button
+                android:id="@+id/view_results_button"
+                android:layout_gravity="center"
+                android:background="@drawable/button_shape"
+                android:gravity="center"
+                android:text="@string/view_results_button"
+                android:textColor="@color/white"
+                android:width="110dp"/>
+        </TableRow>
     </TableLayout>
 </LinearLayout>

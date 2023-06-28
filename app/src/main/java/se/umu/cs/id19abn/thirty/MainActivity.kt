@@ -1,5 +1,6 @@
 package se.umu.cs.id19abn.thirty
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 
+
 class MainActivity : ComponentActivity() {
 
     private val diceButtonList = mutableListOf<ImageButton>()
@@ -17,6 +19,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var chooseButton: Button
     private lateinit var addPointsButton: Button
     private lateinit var nextRoundButton: Button
+    private lateinit var viewResultsButton: Button
     private lateinit var throwCountView: TextView
     private lateinit var descriptionTextView: TextView
     private lateinit var statusAddTextView: TextView
@@ -41,6 +44,7 @@ class MainActivity : ComponentActivity() {
         chooseButton = findViewById(R.id.choose_button)
         addPointsButton = findViewById(R.id.add_points_button)
         nextRoundButton = findViewById(R.id.next_round_button)
+        viewResultsButton = findViewById(R.id.view_results_button)
         throwCountView = findViewById(R.id.throw_count)
         descriptionTextView = findViewById(R.id.description)
         statusAddTextView = findViewById(R.id.status_add)
@@ -97,6 +101,15 @@ class MainActivity : ComponentActivity() {
             statusAddTextView.text = ""
         }
 
+        viewResultsButton.setOnClickListener {view: View ->
+            // view different activity
+
+            val intent = Intent(this, RestultsActivity::class.java)
+            intent.putStringArrayListExtra("scoreList", game.getHistoryScoresStings())
+            intent.putExtra("totalScore", game.getTotalPoints())
+            startActivity(intent);
+        }
+
         // Init game
         updateDiceImages(game.getDiceList())
         updateRoundThrowText()
@@ -147,6 +160,7 @@ class MainActivity : ComponentActivity() {
                 spinner.visibility = View.GONE
                 addPointsButton.visibility = View.GONE
                 nextRoundButton.visibility = View.GONE
+                viewResultsButton.visibility = View.GONE
             }
             3 -> {
                 throwButton.visibility = View.GONE
@@ -154,13 +168,20 @@ class MainActivity : ComponentActivity() {
                 spinner.visibility = View.VISIBLE
                 addPointsButton.visibility = View.GONE
                 nextRoundButton.visibility = View.GONE
+                viewResultsButton.visibility = View.GONE
             }
             4 -> {
                 throwButton.visibility = View.GONE
                 chooseButton.visibility = View.GONE
                 spinner.visibility = View.GONE
                 addPointsButton.visibility = View.VISIBLE
-                nextRoundButton.visibility = View.VISIBLE
+                if (game.getCurrentRound() == game.getMaxNumRounds()) {
+                    nextRoundButton.visibility = View.GONE
+                    viewResultsButton.visibility = View.VISIBLE
+                } else {
+                    nextRoundButton.visibility = View.VISIBLE
+                    viewResultsButton.visibility = View.GONE
+                }
             }
             5 -> { // maybe don't need this
                 throwButton.visibility = View.GONE

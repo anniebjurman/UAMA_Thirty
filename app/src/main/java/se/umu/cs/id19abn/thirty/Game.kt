@@ -15,18 +15,40 @@ class Game {
     )
     private var currentThrow = 0
     private var currentRound = 1
-    private var numRounds = 10
+    private var maxNumRounds = 10
     private var roundIsOver = false
     private var currentStep = 1
     private var chosenLevel = 0
     private var totalPoints = 0
-    private var historyPoints = arrayListOf<Score>()
+    private var historyScores = arrayListOf<Score>()
 
     fun getRoundIsOver(): Boolean {
         return roundIsOver
     }
+
+    fun getHistoryScores(): ArrayList<Score> {
+        return historyScores
+    }
+
+    fun getHistoryScoresStings(): ArrayList<String> {
+        val stringList = arrayListOf<String>()
+        historyScores.forEach {
+            var string = ""
+            it.dice.forEach {
+                string += "$it, "
+            }
+            string += "--> ${it.sum}"
+            stringList.add(string)
+        }
+
+        return stringList
+    }
     fun getDiceList(): List<Dice> {
         return diceList
+    }
+
+    fun getMaxNumRounds(): Int {
+        return maxNumRounds
     }
 
     fun getCurrentRound(): Int {
@@ -93,7 +115,7 @@ class Game {
         if (chosenLevel == 0) {
             return if (sum == 1 || sum == 2 || sum == 3) {
                 totalPoints += sum
-                historyPoints.add(Score(dice, sum, currentRound))
+                historyScores.add(Score(dice, sum, currentRound))
                 "$sum points added!"
 
             } else {
@@ -106,7 +128,7 @@ class Game {
         } else {
             return if (sum == chosenLevel) {
                 totalPoints += sum
-                historyPoints.add(Score(dice, sum, currentRound))
+                historyScores.add(Score(dice, sum, currentRound))
                 "$sum points added!"
             } else {
                 diceIndices.forEach {
