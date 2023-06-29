@@ -16,6 +16,7 @@
     <string name="view_results_button">View results</string>
     <string name="results_title">Results</string>
     <string name="results_total">Total points</string>
+    <string name="start_game">Start Game</string>
 
     <string name="step1">1. Start the game by making the first throw.</string>
     <string name="step2">2. Continue throwing the dice 2 more times, and saving dice in between.</string>

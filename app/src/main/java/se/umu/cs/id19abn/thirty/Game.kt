@@ -61,7 +61,7 @@ class Game {
 
     fun setChosenLevel(level: String) {
         when (level) {
-            "low" -> {chosenLevel = 0}
+            "Low" -> {chosenLevel = 0}
             "1" -> {chosenLevel = 1}
             "2" -> {chosenLevel = 2}
             "3" -> {chosenLevel = 3}

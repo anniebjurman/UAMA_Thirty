@@ -2,6 +2,7 @@ package se.umu.cs.id19abn.thirty
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
@@ -27,6 +28,11 @@ class MainActivity : ComponentActivity() {
     private lateinit var scoreList: Array<String>
     private lateinit var spinner: Spinner
     private var game = Game()
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        outState.putAll()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,12 +108,11 @@ class MainActivity : ComponentActivity() {
         }
 
         viewResultsButton.setOnClickListener {view: View ->
-            // view different activity
-
             val intent = Intent(this, RestultsActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             intent.putStringArrayListExtra("scoreList", game.getHistoryScoresStings())
             intent.putExtra("totalScore", game.getTotalPoints())
-            startActivity(intent);
+            startActivity(intent)
         }
 
         // Init game
