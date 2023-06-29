@@ -1,6 +1,9 @@
 package se.umu.cs.id19abn.thirty
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import java.util.ArrayList
@@ -13,6 +16,7 @@ class RestultsActivity : ComponentActivity() {
     private val totalStringList: ArrayList<String> = arrayListOf("", "", "", "", "", "", "", "", "", "",)
     private var totalScore: Int = -1
     private var historyScores: ArrayList<Score>? = arrayListOf()
+    private lateinit var restartButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +33,13 @@ class RestultsActivity : ComponentActivity() {
         dataTextViewList.add(findViewById(R.id.round9_data))
         dataTextViewList.add(findViewById(R.id.round10_data))
         totalPointsTextView = findViewById(R.id.total_points)
+        restartButton = findViewById(R.id.restart_button)
+
+        restartButton.setOnClickListener { view: View ->
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
+        }
 
         val intent = intent
         val extras: Bundle? = intent.extras
