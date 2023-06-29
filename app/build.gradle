@@ -1,11 +1,18 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android-extensions'
 }
+
+apply plugin: 'org.jetbrains.kotlin.android.extensions'
 
 android {
     namespace 'se.umu.cs.id19abn.thirty'
     compileSdk 34
+
+    androidExtensions {
+        experimental = true
+    }
 
     defaultConfig {
         applicationId "se.umu.cs.id19abn.thirty"

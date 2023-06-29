@@ -29,10 +29,10 @@ class MainActivity : ComponentActivity() {
     private lateinit var spinner: Spinner
     private var game = Game()
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        outState.putAll()
-    }
+//    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+//        super.onSaveInstanceState(outState, outPersistentState)
+//        outState.putAll()
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,11 +81,17 @@ class MainActivity : ComponentActivity() {
             updateElementVisibility()
         }
         chooseButton.setOnClickListener { view: View ->
-            game.setCurrentStep(4)
-            updateDescriptionText()
-            updateElementVisibility()
-            updateDiceImages(game.getDiceList())
-            game.setChosenLevel(spinner.selectedItem.toString())
+            if (game.checkUsedLevel(spinner.selectedItem.toString())) {
+                statusAddTextView.text = ""
+                game.setChosenLevel(spinner.selectedItem.toString())
+                game.setCurrentStep(4)
+                updateDescriptionText()
+                updateElementVisibility()
+                updateDiceImages(game.getDiceList())
+            } else {
+                val errorString = "Already used level ${spinner.selectedItem}, choose another level!"
+                statusAddTextView.text = errorString
+            }
         }
         addPointsButton.setOnClickListener { view: View ->
             updateDescriptionText()
@@ -110,7 +116,10 @@ class MainActivity : ComponentActivity() {
         viewResultsButton.setOnClickListener {view: View ->
             val intent = Intent(this, RestultsActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            intent.putStringArrayListExtra("scoreList", game.getHistoryScoresStings())
+
+            intent.putExtra("historyScores", game.getHistoryScores())
+//            intent.putExtra("game", game)
+//            intent.putStringArrayListExtra("scoreList", game.getHistoryScoresStings())
             intent.putExtra("totalScore", game.getTotalPoints())
             startActivity(intent)
         }

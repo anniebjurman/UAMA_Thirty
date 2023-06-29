@@ -1,11 +1,13 @@
 package se.umu.cs.id19abn.thirty
 
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import java.util.Objects
 import kotlin.random.Random
 
-class Game {
-    private val diceList = listOf(
+class Game() : Parcelable {
+    private var diceList = arrayListOf(
         Dice(1, false, false),
         Dice(2, false, false),
         Dice(3, false, false),
@@ -16,34 +18,49 @@ class Game {
     private var currentThrow = 0
     private var currentRound = 1
     private var maxNumRounds = 10
-    private var roundIsOver = false
+//    private var roundIsOver = false
     private var currentStep = 1
     private var chosenLevel = 0
     private var totalPoints = 0
     private var historyScores = arrayListOf<Score>()
+    private var usedLevels = arrayListOf<String>()
 
-    fun getRoundIsOver(): Boolean {
-        return roundIsOver
+    constructor(parcel: Parcel) : this() {
+        diceList = arrayListOf<Dice>().also { parcel.readTypedList(ArrayList<Dice>(), Dice.CREATOR) }
+        currentThrow = parcel.readInt()
+        currentRound = parcel.readInt()
+        maxNumRounds = parcel.readInt()
+//        roundIsOver = parcel.readByte() != 0.toByte()
+        currentStep = parcel.readInt()
+        chosenLevel = parcel.readInt()
+        totalPoints = parcel.readInt()
+    }
+
+    fun resetGame() {
+        diceList = arrayListOf(
+            Dice(1, false, false),
+            Dice(2, false, false),
+            Dice(3, false, false),
+            Dice(4, false, false),
+            Dice(5, false, false),
+            Dice(6, false, false),
+        )
+        currentThrow = 0
+        currentRound = 1
+        maxNumRounds = 10
+//        roundIsOver = false
+        currentStep = 1
+        chosenLevel = 0
+        totalPoints = 0
+        historyScores = arrayListOf()
+        usedLevels = arrayListOf()
     }
 
     fun getHistoryScores(): ArrayList<Score> {
         return historyScores
     }
 
-    fun getHistoryScoresStings(): ArrayList<String> {
-        val stringList = arrayListOf<String>()
-        historyScores.forEach {
-            var string = ""
-            it.dice.forEach {
-                string += "$it, "
-            }
-            string += "--> ${it.sum}"
-            stringList.add(string)
-        }
-
-        return stringList
-    }
-    fun getDiceList(): List<Dice> {
+    fun getDiceList(): ArrayList<Dice> {
         return diceList
     }
 
@@ -59,7 +76,18 @@ class Game {
         return currentThrow
     }
 
+    fun checkUsedLevel(level: String): Boolean {
+        var result = true
+        usedLevels.forEach {
+            if (level == it) {
+                result = false
+            }
+        }
+        return result
+    }
+
     fun setChosenLevel(level: String) {
+        usedLevels.add(level)
         when (level) {
             "Low" -> {chosenLevel = 0}
             "1" -> {chosenLevel = 1}
@@ -81,7 +109,7 @@ class Game {
         if (currentThrow == 3) {
             currentThrow = 0
             currentRound += 1
-            roundIsOver = false
+//            roundIsOver = false
             updateStep()
             return
         }
@@ -90,7 +118,7 @@ class Game {
         generateNewDice()
 
         if (currentThrow == 3) {
-            roundIsOver = true
+//            roundIsOver = true
             resetDice()
         }
 
@@ -187,6 +215,31 @@ class Game {
 
     fun toggleLockedDice(dice: Int) {
         diceList[dice].locked = !diceList[dice].locked
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeTypedList(diceList)
+        parcel.writeInt(currentThrow)
+        parcel.writeInt(currentRound)
+        parcel.writeInt(maxNumRounds)
+//        parcel.writeByte(if (roundIsOver) 1 else 0)
+        parcel.writeInt(currentStep)
+        parcel.writeInt(chosenLevel)
+        parcel.writeInt(totalPoints)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Game> {
+        override fun createFromParcel(parcel: Parcel): Game {
+            return Game(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Game?> {
+            return arrayOfNulls(size)
+        }
     }
 
 }

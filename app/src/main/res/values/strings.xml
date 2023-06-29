@@ -17,12 +17,26 @@
     <string name="results_title">Results</string>
     <string name="results_total">Total points</string>
     <string name="start_game">Start Game</string>
+    <string name="restart_game">Play Again</string>
+
+    <string name="round1">Round 1</string>
+    <string name="round2">Round 2</string>
+    <string name="round3">Round 3</string>
+    <string name="round4">Round 4</string>
+    <string name="round5">Round 5</string>
+    <string name="round6">Round 6</string>
+    <string name="round7">Round 7</string>
+    <string name="round8">Round 8</string>
+    <string name="round9">Round 9</string>
+    <string name="round10">Round 10</string>
 
     <string name="step1">1. Start the game by making the first throw.</string>
-    <string name="step2">2. Continue throwing the dice 2 more times, and saving dice in between.</string>
+    <string name="step2">2. Continue throwing the dice 2 more times, and saving dice in between. (tap to save)</string>
     <string name="step3">3. Choose which number the dice are going to add upp to.</string>
     <string name="step4">4. Select dice that add up to that number and add those points.</string>
     <string name="step5">5. No more point can be added, continue to the next round.</string>
+
+    <string name="description">Thirty is a dice game not unlike Yatzy where you throw six dice in rounds. You throw the dice a total of three times. At each turn, the player gets to choose which of the six dice they want to reroll or keep. After the three throws, the score for the dice is calculated. A game then consists of 10 such rounds.</string>
 
     <string-array name="score_list">
         <item>Low</item>

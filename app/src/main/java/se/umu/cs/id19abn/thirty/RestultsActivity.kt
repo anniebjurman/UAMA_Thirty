@@ -1,8 +1,6 @@
 package se.umu.cs.id19abn.thirty
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import java.util.ArrayList
@@ -10,33 +8,65 @@ import java.util.ArrayList
 
 class RestultsActivity : ComponentActivity() {
 
-    private lateinit var resultsTextView: TextView
     private lateinit var totalPointsTextView: TextView
-
-//    private lateinit var intent: Intent
-    private lateinit var resultsList: ArrayList<String>
+    private val dataTextViewList: ArrayList<TextView> = arrayListOf()
+    private val totalStringList: ArrayList<String> = arrayListOf("", "", "", "", "", "", "", "", "", "",)
     private var totalScore: Int = -1
+    private var historyScores: ArrayList<Score>? = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_restults)
 
-        resultsTextView = findViewById(R.id.results_text_view)
+        dataTextViewList.add(findViewById(R.id.round1_data))
+        dataTextViewList.add(findViewById(R.id.round2_data))
+        dataTextViewList.add(findViewById(R.id.round3_data))
+        dataTextViewList.add(findViewById(R.id.round4_data))
+        dataTextViewList.add(findViewById(R.id.round5_data))
+        dataTextViewList.add(findViewById(R.id.round6_data))
+        dataTextViewList.add(findViewById(R.id.round7_data))
+        dataTextViewList.add(findViewById(R.id.round8_data))
+        dataTextViewList.add(findViewById(R.id.round9_data))
+        dataTextViewList.add(findViewById(R.id.round10_data))
         totalPointsTextView = findViewById(R.id.total_points)
 
         val intent = intent
-        resultsList = intent.getStringArrayListExtra("scoreList") as ArrayList<String>
-        totalScore = intent.getIntExtra("totalScore", -1)
+        val extras: Bundle? = intent.extras
+//        Log.d("EXTRA", extras.toString())
+        if (extras != null) {
+            historyScores = extras.getParcelableArrayList("historyScores")
+            totalScore = extras.getInt("totalScore", -1)
+//            val game = extras.getParcelable<Game>("game")
+//            val game = extras.getParcelableExtra<Restaurant>("foo")
+        }
+        totalPointsTextView.text = totalScore.toString()
 
-        Log.d("RESULTS", totalScore.toString())
+        historyScores?.forEach {
+            var string = ""
+            it.dice.forEach {
+                string += "$it, "
+            }
+            string += "--> ${it.sum} \n"
 
-        var finalResultString = ""
-        resultsList.forEach {
-            finalResultString += "$it \n"
+            when (it.round) {
+                1 -> totalStringList[0] += string
+                2 -> totalStringList[1] += string
+                3 -> totalStringList[2] += string
+                4 -> totalStringList[3] += string
+                5 -> totalStringList[4] += string
+                6 -> totalStringList[5] += string
+                7 -> totalStringList[6] += string
+                8 -> totalStringList[7] += string
+                9 -> totalStringList[8] += string
+                10 -> totalStringList[9] += string
+                else -> {
+                    print("Error!")
+                }
+            }
         }
 
-//        val tmp = "hello"
-        resultsTextView.text = finalResultString
-        totalPointsTextView.text = totalScore.toString()
+        for (d in dataTextViewList.indices) {
+            dataTextViewList[d].text = totalStringList[d]
+        }
     }
 }
