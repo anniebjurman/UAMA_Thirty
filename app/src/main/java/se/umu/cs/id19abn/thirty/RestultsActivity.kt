@@ -41,17 +41,27 @@ class RestultsActivity : ComponentActivity() {
             startActivity(intent)
         }
 
+        // Get data from intent
         val intent = intent
         val extras: Bundle? = intent.extras
-//        Log.d("EXTRA", extras.toString())
         if (extras != null) {
             historyScores = extras.getParcelableArrayList("historyScores")
             totalScore = extras.getInt("totalScore", -1)
-//            val game = extras.getParcelable<Game>("game")
-//            val game = extras.getParcelableExtra<Restaurant>("foo")
         }
-        totalPointsTextView.text = totalScore.toString()
 
+        setResultTexts()
+    }
+
+    private fun setResultTexts() {
+        totalPointsTextView.text = totalScore.toString()
+        setDataTextViewList()
+
+        for (d in dataTextViewList.indices) {
+            dataTextViewList[d].text = totalStringList[d]
+        }
+    }
+
+    private fun setDataTextViewList() {
         historyScores?.forEach {
             var string = ""
             it.dice.forEach {
@@ -74,10 +84,6 @@ class RestultsActivity : ComponentActivity() {
                     print("Error!")
                 }
             }
-        }
-
-        for (d in dataTextViewList.indices) {
-            dataTextViewList[d].text = totalStringList[d]
         }
     }
 }

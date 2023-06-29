@@ -18,7 +18,6 @@ class Game() : Parcelable {
     private var currentThrow = 0
     private var currentRound = 1
     private var maxNumRounds = 10
-//    private var roundIsOver = false
     private var currentStep = 1
     private var chosenLevel = 0
     private var totalPoints = 0
@@ -30,30 +29,9 @@ class Game() : Parcelable {
         currentThrow = parcel.readInt()
         currentRound = parcel.readInt()
         maxNumRounds = parcel.readInt()
-//        roundIsOver = parcel.readByte() != 0.toByte()
         currentStep = parcel.readInt()
         chosenLevel = parcel.readInt()
         totalPoints = parcel.readInt()
-    }
-
-    fun resetGame() {
-        diceList = arrayListOf(
-            Dice(1, false, false),
-            Dice(2, false, false),
-            Dice(3, false, false),
-            Dice(4, false, false),
-            Dice(5, false, false),
-            Dice(6, false, false),
-        )
-        currentThrow = 0
-        currentRound = 1
-        maxNumRounds = 10
-//        roundIsOver = false
-        currentStep = 1
-        chosenLevel = 0
-        totalPoints = 0
-        historyScores = arrayListOf()
-        usedLevels = arrayListOf()
     }
 
     fun getHistoryScores(): ArrayList<Score> {
@@ -109,7 +87,6 @@ class Game() : Parcelable {
         if (currentThrow == 3) {
             currentThrow = 0
             currentRound += 1
-//            roundIsOver = false
             updateStep()
             return
         }
@@ -118,7 +95,6 @@ class Game() : Parcelable {
         generateNewDice()
 
         if (currentThrow == 3) {
-//            roundIsOver = true
             resetDice()
         }
 
@@ -140,6 +116,7 @@ class Game() : Parcelable {
             }
         }
 
+        // Level is "Low"
         if (chosenLevel == 0) {
             return if (sum == 1 || sum == 2 || sum == 3) {
                 totalPoints += sum
@@ -153,7 +130,7 @@ class Game() : Parcelable {
                 }
                 "Selected dice does not add upp to 1, 2 or 3"
             }
-        } else {
+        } else { // Level is any other number
             return if (sum == chosenLevel) {
                 totalPoints += sum
                 historyScores.add(Score(dice, sum, currentRound))
@@ -222,7 +199,6 @@ class Game() : Parcelable {
         parcel.writeInt(currentThrow)
         parcel.writeInt(currentRound)
         parcel.writeInt(maxNumRounds)
-//        parcel.writeByte(if (roundIsOver) 1 else 0)
         parcel.writeInt(currentStep)
         parcel.writeInt(chosenLevel)
         parcel.writeInt(totalPoints)
@@ -241,5 +217,4 @@ class Game() : Parcelable {
             return arrayOfNulls(size)
         }
     }
-
 }

@@ -17,6 +17,7 @@ class IntroActivity : ComponentActivity() {
 
         startButton = findViewById(R.id.start_button)
 
+        // Go to main activity when user clicks "start game"
         startButton.setOnClickListener { view: View ->
             val intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)

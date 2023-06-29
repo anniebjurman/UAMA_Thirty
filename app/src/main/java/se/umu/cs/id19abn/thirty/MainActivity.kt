@@ -12,7 +12,6 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 
-
 class MainActivity : ComponentActivity() {
 
     private val diceButtonList = mutableListOf<ImageButton>()
@@ -29,16 +28,23 @@ class MainActivity : ComponentActivity() {
     private lateinit var spinner: Spinner
     private var game = Game()
 
-//    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-//        super.onSaveInstanceState(outState, outPersistentState)
-//        outState.putAll()
-//    }
+    // Save data if activity is destroyed
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable("gameObject", game)
+        outState.putString("stateMessage", statusAddTextView.text.toString())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start)
 
-//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        // Restore data if activity is destroyed and immediately recreated
+        if (savedInstanceState != null) {
+            game = savedInstanceState.getParcelable("gameObject")!!
+            totalPointsTextView.text = game.getTotalPoints().toString()
+            statusAddTextView.text = savedInstanceState.getString("stateMessage")
+        }
 
         diceButtonList.add(findViewById(R.id.dice_button_1))
         diceButtonList.add(findViewById(R.id.dice_button_2))
@@ -56,6 +62,14 @@ class MainActivity : ComponentActivity() {
         statusAddTextView = findViewById(R.id.status_add)
         totalPointsTextView = findViewById(R.id.total_points)
 
+        // Spinner for choosing level
+        scoreList = resources.getStringArray(R.array.score_list)
+        spinner = findViewById(R.id.spinner)
+        val adapter = ArrayAdapter(this,
+            android.R.layout.simple_spinner_item, scoreList)
+        spinner.adapter = adapter
+
+        // Setup clickListeners
         for (d in diceButtonList.indices) {
             diceButtonList[d].setOnClickListener { view: View ->
                 if (game.getCurrentStep() != 3) {
@@ -65,14 +79,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // Spinner
-        scoreList = resources.getStringArray(R.array.score_list)
-        spinner = findViewById(R.id.spinner)
-        val adapter = ArrayAdapter(this,
-            android.R.layout.simple_spinner_item, scoreList)
-        spinner.adapter = adapter
-
-        // Setup clickListeners
         throwButton.setOnClickListener { view: View ->
             game.throwDice()
             updateDiceImages(game.getDiceList())
@@ -80,7 +86,9 @@ class MainActivity : ComponentActivity() {
             updateDescriptionText()
             updateElementVisibility()
         }
+
         chooseButton.setOnClickListener { view: View ->
+            // Check is level is already used
             if (game.checkUsedLevel(spinner.selectedItem.toString())) {
                 statusAddTextView.text = ""
                 game.setChosenLevel(spinner.selectedItem.toString())
@@ -93,10 +101,12 @@ class MainActivity : ComponentActivity() {
                 statusAddTextView.text = errorString
             }
         }
+
         addPointsButton.setOnClickListener { view: View ->
             updateDescriptionText()
             updateElementVisibility()
 
+            // Count points and update total points
             val status = game.countPoints()
             statusAddTextView.text = status
             updateDiceImages(game.getDiceList())
@@ -104,7 +114,9 @@ class MainActivity : ComponentActivity() {
             val totalPointsString = "Points: " + game.getTotalPoints().toString()
             totalPointsTextView.text = totalPointsString
         }
+
         nextRoundButton.setOnClickListener { view: View ->
+            // Go back to first step of the game
             game.setCurrentStep(1)
             updateDescriptionText()
             updateElementVisibility()
@@ -113,13 +125,12 @@ class MainActivity : ComponentActivity() {
             statusAddTextView.text = ""
         }
 
+        // Start result activity
         viewResultsButton.setOnClickListener {view: View ->
             val intent = Intent(this, RestultsActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
             intent.putExtra("historyScores", game.getHistoryScores())
-//            intent.putExtra("game", game)
-//            intent.putStringArrayListExtra("scoreList", game.getHistoryScoresStings())
             intent.putExtra("totalScore", game.getTotalPoints())
             startActivity(intent)
         }
@@ -197,13 +208,6 @@ class MainActivity : ComponentActivity() {
                     viewResultsButton.visibility = View.GONE
                 }
             }
-            5 -> { // maybe don't need this
-                throwButton.visibility = View.GONE
-                chooseButton.visibility = View.GONE
-                spinner.visibility = View.GONE
-                addPointsButton.visibility = View.GONE
-                nextRoundButton.visibility = View.VISIBLE
-            }
         }
     }
 
@@ -240,27 +244,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-//        else if (game.getRoundIsOver()) {
-//            return when (num) {
-//                1 -> (R.drawable.green1)
-//                2 -> (R.drawable.green2)
-//                3 -> (R.drawable.green3)
-//                4 -> (R.drawable.green4)
-//                5 -> (R.drawable.green5)
-//                6 -> (R.drawable.green6)
-//                else -> {
-//                    throw error("error")
-//                }
-//            }
-//        }
         else {
             return when (num) {
-//                1 -> (R.drawable.blue1)
-//                2 -> (R.drawable.blue2)
-//                3 -> (R.drawable.blue3)
-//                4 -> (R.drawable.blue4)
-//                5 -> (R.drawable.blue5)
-//                6 -> (R.drawable.blue6)
                 1 -> (R.drawable.green1)
                 2 -> (R.drawable.green2)
                 3 -> (R.drawable.green3)
