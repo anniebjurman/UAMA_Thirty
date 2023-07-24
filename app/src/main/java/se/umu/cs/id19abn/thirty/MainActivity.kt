@@ -39,11 +39,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start)
 
+        statusAddTextView = findViewById(R.id.status_add)
+        totalPointsTextView = findViewById(R.id.total_points)
+        descriptionTextView = findViewById(R.id.description)
+
         // Restore data if activity is destroyed and immediately recreated
         if (savedInstanceState != null) {
             game = savedInstanceState.getParcelable("gameObject")!!
-            totalPointsTextView.text = game.getTotalPoints().toString()
+
+            val totalPointsString = "Points: " + game.getTotalPoints().toString()
+            totalPointsTextView.text = totalPointsString
+
             statusAddTextView.text = savedInstanceState.getString("stateMessage")
+            updateDescriptionText()
         }
 
         diceButtonList.add(findViewById(R.id.dice_button_1))
@@ -58,9 +66,6 @@ class MainActivity : ComponentActivity() {
         nextRoundButton = findViewById(R.id.next_round_button)
         viewResultsButton = findViewById(R.id.view_results_button)
         throwCountView = findViewById(R.id.throw_count)
-        descriptionTextView = findViewById(R.id.description)
-        statusAddTextView = findViewById(R.id.status_add)
-        totalPointsTextView = findViewById(R.id.total_points)
 
         // Spinner for choosing level
         scoreList = resources.getStringArray(R.array.score_list)
