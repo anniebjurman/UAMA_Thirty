@@ -38,13 +38,14 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_marginEnd="50dp">
+
                     <TextView
                         android:id="@+id/round1_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/round1"
                         android:textColor="#274E40"
-                        android:textSize="17sp"
-                        android:text="@string/round1"/>
+                        android:textSize="17sp" />
 
                     <TextView
                         android:id="@+id/round1_data"

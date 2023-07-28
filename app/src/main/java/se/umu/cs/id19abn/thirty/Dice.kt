@@ -3,6 +3,8 @@ package se.umu.cs.id19abn.thirty
 import android.os.Parcel
 import android.os.Parcelable
 
+// Data class to represent a dice in the game
+// Implements Parcelable to be able to send object between activities (in intents)
 data class Dice(var value: Int, var locked: Boolean, var counted: Boolean ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),

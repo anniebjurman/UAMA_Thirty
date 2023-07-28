@@ -6,6 +6,8 @@ import android.util.Log
 import java.util.Objects
 import kotlin.random.Random
 
+// Class to represent and group all the games logic
+// Implements Parcelable to be able to send object between activities (in intents)
 class Game() : Parcelable {
     private var diceList = arrayListOf(
         Dice(1, false, false),

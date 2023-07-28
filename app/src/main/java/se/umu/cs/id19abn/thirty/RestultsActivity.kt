@@ -8,9 +8,10 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import java.util.ArrayList
 
-
+// Results Activity, controls the last view that displays the results.
 class RestultsActivity : ComponentActivity() {
 
+    // Declare variables
     private lateinit var totalPointsTextView: TextView
     private val dataTextViewList: ArrayList<TextView> = arrayListOf()
     private val totalStringList: ArrayList<String> = arrayListOf("", "", "", "", "", "", "", "", "", "",)
@@ -22,6 +23,7 @@ class RestultsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_restults)
 
+        // Find and setup view elements
         dataTextViewList.add(findViewById(R.id.round1_data))
         dataTextViewList.add(findViewById(R.id.round2_data))
         dataTextViewList.add(findViewById(R.id.round3_data))
@@ -35,13 +37,15 @@ class RestultsActivity : ComponentActivity() {
         totalPointsTextView = findViewById(R.id.total_points)
         restartButton = findViewById(R.id.restart_button)
 
+        // Listener for the restart button
+        // When clicked the MainActivity is restarted
         restartButton.setOnClickListener { view: View ->
             val intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)
         }
 
-        // Get data from intent
+        // Get result data from intent
         val intent = intent
         val extras: Bundle? = intent.extras
         if (extras != null) {
@@ -49,9 +53,11 @@ class RestultsActivity : ComponentActivity() {
             totalScore = extras.getInt("totalScore", -1)
         }
 
+        // Run method to set result text to view elements
         setResultTexts()
     }
 
+    // Method to set result text
     private fun setResultTexts() {
         totalPointsTextView.text = totalScore.toString()
         setDataTextViewList()
@@ -61,6 +67,7 @@ class RestultsActivity : ComponentActivity() {
         }
     }
 
+    // Method to set result text in different views
     private fun setDataTextViewList() {
         historyScores?.forEach {
             var string = ""

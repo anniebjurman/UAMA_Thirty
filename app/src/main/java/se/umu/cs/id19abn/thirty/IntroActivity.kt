@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import androidx.activity.ComponentActivity
 
+// Intro Activity, controls the first view the player see
 class IntroActivity : ComponentActivity() {
 
     private lateinit var startButton: Button

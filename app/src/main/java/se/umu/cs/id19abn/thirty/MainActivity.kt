@@ -12,8 +12,10 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 
+// Main Activity, controls the game part of the app
 class MainActivity : ComponentActivity() {
 
+    // Declare variables
     private val diceButtonList = mutableListOf<ImageButton>()
     private lateinit var throwButton: Button
     private lateinit var chooseButton: Button
@@ -39,11 +41,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start)
 
+        // Initialize variables
         statusAddTextView = findViewById(R.id.status_add)
         totalPointsTextView = findViewById(R.id.total_points)
         descriptionTextView = findViewById(R.id.description)
 
-        // Restore data if activity is destroyed and immediately recreated
+        // Restore saved data if activity is destroyed and immediately recreated
         if (savedInstanceState != null) {
             game = savedInstanceState.getParcelable("gameObject")!!
 
@@ -54,6 +57,7 @@ class MainActivity : ComponentActivity() {
             updateDescriptionText()
         }
 
+        // Initialize variables
         diceButtonList.add(findViewById(R.id.dice_button_1))
         diceButtonList.add(findViewById(R.id.dice_button_2))
         diceButtonList.add(findViewById(R.id.dice_button_3))
@@ -67,15 +71,18 @@ class MainActivity : ComponentActivity() {
         viewResultsButton = findViewById(R.id.view_results_button)
         throwCountView = findViewById(R.id.throw_count)
 
-        // Spinner for choosing level
+        // Set up spinner for choosing level
         scoreList = resources.getStringArray(R.array.score_list)
         spinner = findViewById(R.id.spinner)
+
+        // Create adapter with the different levels to choose
         val adapter = ArrayAdapter(this,
             android.R.layout.simple_spinner_item, scoreList)
         spinner.adapter = adapter
 
         // Setup clickListeners
         for (d in diceButtonList.indices) {
+            // Click -> Mark that dice
             diceButtonList[d].setOnClickListener { view: View ->
                 if (game.getCurrentStep() != 3) {
                     game.toggleLockedDice(d)
@@ -84,6 +91,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Click -> Throw dice
         throwButton.setOnClickListener { view: View ->
             game.throwDice()
             updateDiceImages(game.getDiceList())
@@ -92,9 +100,11 @@ class MainActivity : ComponentActivity() {
             updateElementVisibility()
         }
 
+        // Click -> Set chosen level
         chooseButton.setOnClickListener { view: View ->
             // Check is level is already used
             if (game.checkUsedLevel(spinner.selectedItem.toString())) {
+                // If chosen level is ok -> update game
                 statusAddTextView.text = ""
                 game.setChosenLevel(spinner.selectedItem.toString())
                 game.setCurrentStep(4)
@@ -102,27 +112,32 @@ class MainActivity : ComponentActivity() {
                 updateElementVisibility()
                 updateDiceImages(game.getDiceList())
             } else {
+                // If chosen level is already used -> notify player
                 val errorString = "Already used level ${spinner.selectedItem}, choose another level!"
                 statusAddTextView.text = errorString
             }
         }
 
+        // Click -> Add points for the chosen dice
         addPointsButton.setOnClickListener { view: View ->
             updateDescriptionText()
             updateElementVisibility()
 
-            // Count points and update total points
+            // Count points
             val status = game.countPoints()
             statusAddTextView.text = status
             updateDiceImages(game.getDiceList())
 
+            // Update total points text
             val totalPointsString = "Points: " + game.getTotalPoints().toString()
             totalPointsTextView.text = totalPointsString
         }
 
+        // Click -> Go to next round
         nextRoundButton.setOnClickListener { view: View ->
             // Go back to first step of the game
             game.setCurrentStep(1)
+            // Update texts and element visibility for that step
             updateDescriptionText()
             updateElementVisibility()
             updateDiceImages(game.getDiceList())
@@ -130,11 +145,12 @@ class MainActivity : ComponentActivity() {
             statusAddTextView.text = ""
         }
 
-        // Start result activity
+        // Click -> Start result activity
         viewResultsButton.setOnClickListener {view: View ->
             val intent = Intent(this, RestultsActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
+            // Save data to view in the results view
             intent.putExtra("historyScores", game.getHistoryScores())
             intent.putExtra("totalScore", game.getTotalPoints())
             startActivity(intent)
@@ -143,45 +159,37 @@ class MainActivity : ComponentActivity() {
         // Init game
         updateDiceImages(game.getDiceList())
         updateRoundThrowText()
-
-        // Inactivate elements
         updateElementVisibility()
     }
 
+    // Method for updating dice images
     private fun updateDiceImages(diceList: List<Dice>) {
         for (d in diceButtonList.indices) {
             diceButtonList[d].setImageResource(getImgPath(diceList[d], diceList[d].value))
         }
     }
 
+    // Method for updating text about the current round and throw
     private fun updateRoundThrowText() {
         val text = "Round " + game.getCurrentRound().toString() + " / Throw " + game.getCurrentThrow().toString()
         throwCountView.text = text
     }
 
+    // Method for updating the description text depending on the current step
     private fun updateDescriptionText() {
         when (game.getCurrentStep()) {
-            1 -> {
-                descriptionTextView.text = getText(R.string.step1)
-            }
-            2 -> {
-                descriptionTextView.text = getText(R.string.step2)
-            }
-            3 -> {
-                descriptionTextView.text = getText(R.string.step3)
-            }
-            4 -> {
-                descriptionTextView.text = getText(R.string.step4)
-            }
-            5 -> {
-                descriptionTextView.text = getText(R.string.step5)
-            }
+            1 -> descriptionTextView.text = getText(R.string.step1)
+            2 -> descriptionTextView.text = getText(R.string.step2)
+            3 -> descriptionTextView.text = getText(R.string.step3)
+            4 -> descriptionTextView.text = getText(R.string.step4)
+            5 -> descriptionTextView.text = getText(R.string.step5)
             else -> {
                 throw error("error")
             }
         }
     }
 
+    // Method for updating which elements and buttons that are going to be visible, depending on the current step
     private fun updateElementVisibility() {
         when (game.getCurrentStep()) {
             1, 2 -> {
@@ -216,15 +224,19 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    // Method for updating one specific dice image
     private fun updateOneDiceImage(diceIndex: Int) {
         val diceList = game.getDiceList()
         diceButtonList[diceIndex].setImageResource(getImgPath(diceList[diceIndex], diceList[diceIndex].value))
     }
 
+    // Method to get what color the dice should have
     private fun getImgPath(dice: Dice, num: Int): Int {
         if (game.getCurrentThrow() == 0 || dice.counted) {
+            // Beige placeholder if no dice have been thrown or dice have already been counted
             return R.drawable.placeholder
         } else if (dice.locked) {
+            // Orange dice if player have locked that dice
             return when (num) {
                 1 -> (R.drawable.orange1)
                 2 -> (R.drawable.orange2)
@@ -237,6 +249,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         } else if (game.getCurrentStep() == 3) {
+            // Beige dice if level is about to be chosen
             return when (num) {
                 1 -> (R.drawable.beige1)
                 2 -> (R.drawable.beige2)
@@ -250,6 +263,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         else {
+            // Otherwise green dice
             return when (num) {
                 1 -> (R.drawable.green1)
                 2 -> (R.drawable.green2)

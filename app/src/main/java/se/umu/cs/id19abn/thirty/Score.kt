@@ -3,6 +3,8 @@ package se.umu.cs.id19abn.thirty
 import android.os.Parcel
 import android.os.Parcelable
 
+// Data class to represent a score-element in the game
+// Implements Parcelable to be able to send object between activities (in intents)
 data class Score(var dice: List<Int>, var sum: Int, var round: Int) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.createIntList(),
