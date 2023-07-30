@@ -192,35 +192,44 @@ class MainActivity : ComponentActivity() {
     // Method for updating which elements and buttons that are going to be visible, depending on the current step
     private fun updateElementVisibility() {
         when (game.getCurrentStep()) {
-            1, 2 -> {
-                throwButton.visibility = View.VISIBLE
-                chooseButton.visibility = View.GONE
-                spinner.visibility = View.GONE
-                addPointsButton.visibility = View.GONE
-                nextRoundButton.visibility = View.GONE
-                viewResultsButton.visibility = View.GONE
-            }
-            3 -> {
-                throwButton.visibility = View.GONE
-                chooseButton.visibility = View.VISIBLE
-                spinner.visibility = View.VISIBLE
-                addPointsButton.visibility = View.GONE
-                nextRoundButton.visibility = View.GONE
-                viewResultsButton.visibility = View.GONE
-            }
-            4 -> {
-                throwButton.visibility = View.GONE
-                chooseButton.visibility = View.GONE
-                spinner.visibility = View.GONE
-                addPointsButton.visibility = View.VISIBLE
-                if (game.getCurrentRound() == game.getMaxNumRounds()) {
-                    nextRoundButton.visibility = View.GONE
-                    viewResultsButton.visibility = View.VISIBLE
-                } else {
-                    nextRoundButton.visibility = View.VISIBLE
-                    viewResultsButton.visibility = View.GONE
-                }
-            }
+            1, 2 -> showOnlyThrowButton()
+            3 -> showChooseLevelElements()
+            4 -> showAddPointsElements()
+        }
+    }
+
+    // Method for enable elements for showing the throw button
+    private fun showOnlyThrowButton() {
+        throwButton.visibility = View.VISIBLE
+        chooseButton.visibility = View.GONE
+        spinner.visibility = View.GONE
+        addPointsButton.visibility = View.GONE
+        nextRoundButton.visibility = View.GONE
+        viewResultsButton.visibility = View.GONE
+    }
+
+    // Method for enable elements for choosing level in step 3
+    private fun showChooseLevelElements() {
+        throwButton.visibility = View.GONE
+        chooseButton.visibility = View.VISIBLE
+        spinner.visibility = View.VISIBLE
+        addPointsButton.visibility = View.GONE
+        nextRoundButton.visibility = View.GONE
+        viewResultsButton.visibility = View.GONE
+    }
+
+    // Method for enable elements for adding points in step 4
+    private fun showAddPointsElements() {
+        throwButton.visibility = View.GONE
+        chooseButton.visibility = View.GONE
+        spinner.visibility = View.GONE
+        addPointsButton.visibility = View.VISIBLE
+        if (game.getCurrentRound() == game.getMaxNumRounds()) {
+            nextRoundButton.visibility = View.GONE
+            viewResultsButton.visibility = View.VISIBLE
+        } else {
+            nextRoundButton.visibility = View.VISIBLE
+            viewResultsButton.visibility = View.GONE
         }
     }
 
